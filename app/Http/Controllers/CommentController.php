@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CommentStoreRequest;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
@@ -25,11 +27,19 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CommentStoreRequest $request)
     {
-        //
+        try {
+             $data = $request->validated();
+             $data['user_id'] =1;
+             Comment::create($data);
+             return redirect()->back()->with('success', 'Comment yaratildi!');
+        }
+        catch (\Exception $exception)
+        {
+            return redirect()->back()->with('error','Comment yaratishda xatolik yuz berdi');
+        }
     }
-
     /**
      * Display the specified resource.
      */

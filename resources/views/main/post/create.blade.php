@@ -67,19 +67,21 @@
                             <input name="short_content" type="text" value="{{old('short_content')}}" class="form-control p-4" id="subject" placeholder="qisqa malumot" data-validation-required-message="Please enter a subject">
                             <p class="help-block text-danger"></p>
                         </div>
+                        <select name="category_id" class="form-control mb-4">
+                            <option selected disabled>Categories name</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
                         <div class="control-group">
-                            <input name="category" value="{{old('category')}}" type="text" class="form-control p-4" id="subject" placeholder="category" data-validation-required-message="Please enter a subject">
+                            <select class="form-control" name="tag[]" multiple>
+                                <option selected disabled>Tag name</option>
+                                @foreach($tags as $tag)
+                                    <option value="{{$tag->id}}">{{$tag->name}}</option>
+                                @endforeach
+                            </select>
                             <p class="help-block text-danger"></p>
                         </div>
-{{--                        <div class="control-group">--}}
-{{--                            <select class="form-control" name="tags[]" id="" multiple>--}}
-{{--                                <option selected disabled>Tag name</option>--}}
-{{--                                @foreach($tags as $tag)--}}
-{{--                                    <option value="{{$tag->id}}">{{$tag->tag}}</option>--}}
-{{--                                @endforeach--}}
-{{--                            </select>--}}
-{{--                            <p class="help-block text-danger"></p>--}}
-{{--                        </div>--}}
                         <div class="control-group">
                             <textarea name="content"  class="form-control p-4" rows="6" id="message" placeholder="malumot"  data-validation-required-message="Please enter your message">{{old('content')}}</textarea>
                             <p class="help-block text-danger"></p>

@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PostStoreRequest;
 use App\Http\Requests\PostUpdateRequest;
+use App\Models\Category;
 use App\Models\Post;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -15,7 +17,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::query()
+        $posts = Post::with(['category','tags'])
             ->orderByDesc('id')
             ->paginate(3);
         return view('main.post.index',compact('posts'));
@@ -25,7 +27,9 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('main.post.create');
+          $categories = Category::all();
+          $tags = Tag::all();
+        return view('main.post.create', compact('categories','tags'));
     }
     /**
      * @param PostStoreRequest $request
@@ -35,10 +39,15 @@ class PostController extends Controller
     {
         try {
             $data = $request->validated();
+            $data['category_id'] = $request->category_id;
+            $data['user_id'] = 1;
             if ($request->hasFile('photo')) {
                 $data['photo'] = Storage::putFile('public/photo', $request->file('photo'));
             }
-             Post::create($data);
+           $post = Post::create($data);
+            if ($request->has('tag')) {
+                $post->tags()->attach($request->tag);
+             }
              return redirect()->route('posts.index')->with('success', 'Post yaratildi!');;
         }
         catch (\Exception $exception)
@@ -53,7 +62,9 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        return view('main.post.show',compact('post'));
+        $categories = Category::all();
+        $tags = Tag::all();
+        return view('main.post.show',compact('post','categories','tags'));
     }
     /**
      * @param Post $post

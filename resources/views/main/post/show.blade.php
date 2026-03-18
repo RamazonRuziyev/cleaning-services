@@ -59,11 +59,14 @@
             <div class="col-lg-8">
                 <div class="mb-5">
                     <div class="d-flex mb-2">
-                        <a class="text-secondary text-uppercase font-weight-medium" href="">Admin</a>
+                       @foreach($post->tags as $tag)
+                            <a class="text-secondary text-uppercase font-weight-medium" href="">{{$tag->name}}</a>
                         <span class="text-primary px-2">|</span>
-                        <a class="text-secondary text-uppercase font-weight-medium" href="">Cleaning</a>
-                        <span class="text-primary px-2">|</span>
+                        @endforeach
                         <a class="text-secondary text-uppercase font-weight-medium" href="">{{substr($post->created_at,0,10)}}</a>
+                    </div>
+                     <div class="d-flex mb-2">
+                        <a class="text-danger text-uppercase font-weight-medium" href="">{{$post->category->name}}</a>
                     </div>
                  <div class="d-flex align-items-center justify-content-around">
                      <h1 class="section-title mb-3">{{$post->title}}</h1>
@@ -89,22 +92,22 @@
                 </div>
 
 {{--               @auth--}}
-{{--                    <div class="mb-5">--}}
-{{--                        <h3 class="mb-4 section-title">{{$post->comment()->count()}} Comments</h3>--}}
-{{--                        @foreach($comments as $comment)--}}
-{{--                            <div class="media mb-4">--}}
-{{--                                <img src="{{asset('main/img/user.jpg')}}" alt="Image" c     lass="img-fluid rounded-circle mr-3 mt-1" style="width: 45px;">--}}
-{{--                                <div class="media-body">--}}
-{{--                                    <h6>{{$comment->name}} <small> &nbsp;&nbsp; <i>{{substr($comment->created_at,0,10)}}</i></small></h6>--}}
-{{--                                    <p>{{$comment->comment}}</p>--}}
+                    <div class="mb-5">
+                        <h3 class="mb-4 section-title">{{$post->comments()->count()}} Comments</h3>
+                        @foreach($post->comments as $comment)
+                            <div class="media mb-4">
+                                <img src="{{asset('main/img/user.jpg')}}" alt="Image" class="img-fluid rounded-circle mr-3 mt-1" style="width: 45px;">
+                                <div class="media-body">
+                                    <h6>{{$comment->user->name}} <small> &nbsp;&nbsp; <i>{{substr($comment->created_at,0,10)}}</i></small></h6>
+                                    <p>{{$comment->body}}</p>
 {{--                                    <form action="{{route('reply.store',['comment_id' => $comment->id])}}" method="post">--}}
 {{--                                        @csrf--}}
 {{--                                        <input type="text" name="reply" placeholder="reply">--}}
 {{--                                        <button type="submit" class="btn btn-sm btn-light">Reply</button>--}}
 {{--                                    </form>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        @endforeach--}}
+                                </div>
+                            </div>
+                        @endforeach
 {{--                        <div class="media mb-5">--}}
 {{--                            --}}{{--                        <img src="{{asset('main/img/user.jpg')}}" alt="Image" class="img-fluid rounded-circle mr-3 mt-1" style="width: 45px;">--}}
 
@@ -129,24 +132,27 @@
 {{--                        </div>--}}
 {{--                    </div>--}}
 
-{{--                    <div class="bg-light rounded p-5">--}}
-{{--                        <h3 class="mb-4 section-title">Comment</h3>--}}
-{{--                        <form action="{{route('comment.store',['post_id' => $post->id])}}" method="post">--}}
-{{--                            @csrf--}}
-{{--                            <div class="form-group">--}}
-{{--                                <label for="message">Message *</label>--}}
-{{--                                <textarea name="comment" id="message" cols="30" rows="5" class="form-control"></textarea>--}}
-{{--                            </div>--}}
-{{--                            <div class="form-group mb-0">--}}
-{{--                                <input type="submit" value="Comment" class="btn btn-primary">--}}
-{{--                            </div>--}}
-{{--                        </form>--}}
+                    <div class="bg-light rounded p-5">
+                        <h3 class="mb-4 section-title">{{$post->comments()->count()}} Comment</h3>
+                        <form action="{{route('comments.store')}}" method="post" >
+                            @csrf
+                             <input type="hidden" name="post_id" value="{{ $post->id }}">
+                            <div class="form-group">
+                                <label for="message">Message *</label>
+                                <textarea name="body" id="message" cols="30" rows="5" class="form-control"></textarea>
+                            </div>
+                            <div class="form-group mb-0">
+                                <input type="submit" value="Comment" class="btn btn-primary">
+                            </div>
+                        </form>
 
 {{--                    </div>--}}
 {{--               @endauth--}}
             </div>
+        </div>
 
-            <div class="col-lg-4 mt-5 mt-lg-0">
+    </div>
+              <div class="col-lg-4 mt-5 mt-lg-0">
                 <div class="d-flex flex-column text-center bg-secondary rounded mb-5 py-5 px-4">
                     <img src="{{asset('main/img/user.jpg')}}" class="img-fluid rounded-circle mx-auto mb-3" style="width: 100px;">
                     <h3 class="text-white mb-3">
@@ -175,12 +181,12 @@
                     <h3 class="mb-4 section-title">Categories</h3>
                     <ul class="list-inline m-0">
 
-{{--                     @foreach($categories as $category)--}}
-{{--                            <li class="mb-1 py-2 px-3 bg-light d-flex justify-content-between align-items-center">--}}
-{{--                                <a class="text-dark" href="#"><i class="fa fa-angle-right text-secondary mr-2"></i>{{substr($category->category,0,20)}}</a>--}}
-{{--                                <span class="badge badge-primary badge-pill">150</span>--}}
-{{--                            </li>--}}
-{{--                     @endforeach--}}
+                     @foreach($categories as $category)
+                            <li class="mb-1 py-2 px-3 bg-light d-flex justify-content-between align-items-center">
+                                <a class="text-dark" href="#"><i class="fa fa-angle-right text-secondary mr-2"></i>{{ $category->name }}</a>
+                                <span class="badge badge-primary badge-pill">{{$category->posts()->count()}}</span>
+                            </li>
+                     @endforeach
 
                     </ul>
                 </div>
@@ -211,12 +217,9 @@
                 <div class="mb-5">
                     <h3 class="mb-4 section-title">Tag Cloud</h3>
                     <div class="d-flex flex-wrap m-n1">
-                        <a href="" class="btn btn-outline-secondary m-1">Design</a>
-                        <a href="" class="btn btn-outline-secondary m-1">Development</a>
-                        <a href="" class="btn btn-outline-secondary m-1">Marketing</a>
-                        <a href="" class="btn btn-outline-secondary m-1">SEO</a>
-                        <a href="" class="btn btn-outline-secondary m-1">Writing</a>
-                        <a href="" class="btn btn-outline-secondary m-1">Consulting</a>
+                         @foreach($tags as $tag)
+                            <a href="" class="btn btn-outline-secondary m-1">{{ $tag->name }}</a>
+                        @endforeach
                     </div>
                 </div>
                 <div class="mb-5">
@@ -230,8 +233,6 @@
                     rebum dolor, tempor takimata clita sit et elitr ut eirmod.
                 </div>
             </div>
-        </div>
-    </div>
 </div>
 <!-- Detail End -->
 
