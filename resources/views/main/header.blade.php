@@ -55,7 +55,7 @@
 
                         </div>
                     </div>
-{{--                    @auth--}}
+                    @auth
 
                         <a class="mr-3 " href="">
                             <svg style="height: 25px ; width: 40px; color: black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -69,13 +69,13 @@
 {{--                            {{auth()->user()->name}}--}}
                         </div>
                         <a href="{{route('posts.create')}}" class="btn btn-primary mr-3 d-none d-lg-block">post create</a>
-{{--                        <form action="{{route('logout')}}" method="post">--}}
-{{--                            @csrf--}}
-{{--                            <button type="submit" class="btn btn-danger mr-3 d-none d-lg-block">Chiqish</button>--}}
-{{--                        </form>--}}
-{{--                    @else--}}
-                        <a href="" class="btn btn-primary mr-3 d-none d-lg-block">kirish</a>
-{{--                    @endauth--}}
+                        <form action="{{route('logout')}}" method="post">
+                            @csrf
+                            <button type="submit" class="btn btn-danger mr-3 d-none d-lg-block">Chiqish</button>
+                        </form>
+                    @else
+                        <a href="{{route('login')}}" class="btn btn-primary mr-3 d-none d-lg-block">kirish</a>
+                    @endauth
                 </div>
             </nav>
         </div>
