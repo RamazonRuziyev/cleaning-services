@@ -42,18 +42,18 @@
                 <div>
                     <div><a class="logo text-start" href=""><img class="img-fluid for-light" src="{{asset('register/assets/images/logo/login.png')}}" alt="looginpage"><img class="img-fluid for-dark" src="{{asset('register/assets/images/logo/logo_dark.png')}}" alt="looginpage"></a></div>
                     <div class="login-main">
-                        <form action="" method="post">
+                        <form action="{{route('sing')}}" method="post">
                             @csrf
                             <h4>Sign in to account</h4>
                             <p>Enter your email & password to login</p>
                             <div class="form-group">
                                 <label class="col-form-label">Email Address</label>
-                                <input name="email" class="form-control" type="email" required="" placeholder="Test@gmail.com">
+                                <input name="email" class="form-control" type="email"  placeholder="Test@gmail.com">
                             </div>
                             <div class="form-group">
                                 <label class="col-form-label">Password</label>
                                 <div class="form-input position-relative">
-                                    <input class="form-control" type="password" name="password" required="" placeholder="*********">
+                                    <input class="form-control" type="password" name="password"  placeholder="*********">
                                     <div class="show-hide"><span class="show">                         </span></div>
                                 </div>
                             </div>

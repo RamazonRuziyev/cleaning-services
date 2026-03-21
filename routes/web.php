@@ -6,9 +6,10 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('main.master');
-});
+//Route::get('/', function () {
+//    return view('main.master');
+//});
+Route::get('/',[HomeController::class,'main'])->name('main');
 Route::get('/about',[HomeController::class,'about'])->name('about');
 Route::get('/service',[HomeController::class,'service'])->name('service');
 Route::get('/project',[HomeController::class,'project'])->name('project');
@@ -20,6 +21,7 @@ Route::get('/login',[AuthController::class,'login'])->name('login');
 Route::get('/auth',[AuthController::class,'register'])->name('register');
 Route::post('/logout',[AuthController::class,'logout'])->name('logout');
 Route::post('/save',[AuthController::class,'save'])->name('save');
+Route::post('/sing',[AuthController::class,'sing'])->name('sing');
 Route::resources([
     'posts' => PostController::class,
     'comments' => CommentController::class

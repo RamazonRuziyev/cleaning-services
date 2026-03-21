@@ -31,7 +31,7 @@ class CommentController extends Controller
     {
         try {
              $data = $request->validated();
-             $data['user_id'] =1;
+             $data['user_id'] =auth()->id();
              Comment::create($data);
              return redirect()->back()->with('success', 'Comment yaratildi!');
         }

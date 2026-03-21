@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginStoreRequest;
 use App\Http\Requests\RegisterStoreRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -23,7 +25,7 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/login');
+        return redirect()->route('main');
     }
     public function save(RegisterStoreRequest $request)
     {
@@ -36,6 +38,25 @@ class AuthController extends Controller
          catch (\Exception $exception)
         {
              return redirect()->back()->withInput()->with('error', 'Register yaratishda xatolik yuz berdi!');
+        }
+    }
+
+    public function sing(LoginStoreRequest $request)
+    {
+        try {
+            $data = $request->validated();
+             if (!Auth::attempt($data)) {
+
+            throw ValidationException::withMessages([
+                'email' => 'Email yoki parol noto‘g‘ri',
+            ]);
+        }
+             $request->session()->regenerate();
+             return  redirect()->route('main');
+
+        }
+       catch (\Exception $e) {
+        return back()->withInput()->with('error', 'Xatolik yuz berdi!'.$e->getMessage());
         }
     }
 }

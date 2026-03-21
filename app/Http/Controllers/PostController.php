@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Routing\Controller;
 use App\Http\Requests\PostStoreRequest;
 use App\Http\Requests\PostUpdateRequest;
 use App\Models\Category;
@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
+    public function __construct()
+    {
+         $this->middleware('auth')->except('index','show');
+    }
     /**
      * Display a listing of the resource.
      */
