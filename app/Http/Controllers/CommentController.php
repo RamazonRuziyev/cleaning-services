@@ -4,10 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CommentStoreRequest;
 use App\Models\Comment;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
+    use AuthorizesRequests;
+    public function __construct()
+    {
+        $this->authorizeResource(Comment::class,'comment');
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -29,6 +36,7 @@ class CommentController extends Controller
      */
     public function store(CommentStoreRequest $request)
     {
+         $this->authorize('create', Comment::class);
         try {
              $data = $request->validated();
              $data['user_id'] =auth()->id();

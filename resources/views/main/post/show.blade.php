@@ -71,7 +71,7 @@
                  <div class="d-flex align-items-center justify-content-around">
                      <h1 class="section-title mb-3">{{$post->title}}</h1>
                         @auth
-{{--                            @canany(['update','delete'],$post)--}}
+                            @canany(['update','delete'],$post)
                                  <div class="d-flex align-items-center">
                                      <a class="btn btn-primary" href="{{route('posts.edit',$post)}}">Edit</a>&nbsp;
                                      <form action="{{route('posts.destroy',$post)}}" method="post"
@@ -81,7 +81,7 @@
                                          <button type="submit" style="border: none" class="btn btn-danger">Delete</button>
                                      </form>
                                  </div>
-{{--                         @endcanany--}}
+                         @endcanany
                         @endauth
                  </div>
                 </div>
@@ -134,6 +134,7 @@
 
                     <div class="bg-light rounded p-5">
                         <h3 class="mb-4 section-title">{{$post->comments()->count()}} Comment</h3>
+                        @canany('create',$comment)
                         <form action="{{route('comments.store')}}" method="post" >
                             @csrf
                              <input type="hidden" name="post_id" value="{{ $post->id }}">
@@ -145,7 +146,7 @@
                                 <input type="submit" value="Comment" class="btn btn-primary">
                             </div>
                         </form>
-
+                        @endcanany
                     </div>
                @else
                    <div class="bg-light rounded p-5">

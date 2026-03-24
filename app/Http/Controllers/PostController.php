@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Routing\Controller;
 use App\Http\Requests\PostStoreRequest;
 use App\Http\Requests\PostUpdateRequest;
@@ -8,13 +9,16 @@ use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
+    use AuthorizesRequests;
     public function __construct()
     {
          $this->middleware('auth')->except('index','show');
+        $this->authorizeResource(Post::class, 'post');
     }
     /**
      * Display a listing of the resource.
@@ -44,7 +48,7 @@ class PostController extends Controller
         try {
             $data = $request->validated();
             $data['category_id'] = $request->category_id;
-            $data['user_id'] = 1;
+            $data['user_id'] = auth()->user()->id;
             if ($request->hasFile('photo')) {
                 $data['photo'] = Storage::putFile('public/photo', $request->file('photo'));
             }
@@ -58,7 +62,6 @@ class PostController extends Controller
         {
              return redirect()->back()->with('error', 'Post yaratishda xatolik yuz berdi!');
         }
-
     }
     /**
      * @param Post $post
@@ -76,6 +79,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
+        Gate::authorize('update',$post);
         return view('main.post.edit',compact('post'));
     }
     /**
@@ -86,6 +90,7 @@ class PostController extends Controller
      function update(PostUpdateRequest $request, Post $post)
     {
         try {
+            $this->authorize('update',$post);
             $data = $request->validated();
              if ($request->hasFile('photo')) {
                     if ($post->photo && Storage::exists($post->photo))
