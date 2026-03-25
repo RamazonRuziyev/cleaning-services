@@ -9,10 +9,11 @@ use Illuminate\Auth\Access\Response;
 class PostPolicy
 {
     /**
-     * Determine whether the user can view any models.
+     * @param User|null $user
+     * @return bool
      */
 //    index
-    public function viewAny(User $user): bool
+    public function viewAny(?User $user):bool
     {
         return true;
     }
@@ -21,7 +22,7 @@ class PostPolicy
      * Determine whether the user can view the model.
      */
 //    show
-    public function view(User $user, Post $post): bool
+    public function view(?User $user, Post $post): bool
     {
         return true;
     }

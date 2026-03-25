@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Events\PostCreated;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Routing\Controller;
 use App\Http\Requests\PostStoreRequest;
@@ -56,6 +57,7 @@ class PostController extends Controller
             if ($request->has('tag')) {
                 $post->tags()->attach($request->tag);
              }
+            PostCreated::dispatch($post);
              return redirect()->route('posts.index')->with('success', 'Post yaratildi!');;
         }
         catch (\Exception $exception)
@@ -69,9 +71,10 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
+        $posts = $post->load(['user']);
         $categories = Category::all();
         $tags = Tag::all();
-        return view('main.post.show',compact('post','categories','tags'));
+        return view('main.post.show',compact('post','categories','tags','posts'));
     }
     /**
      * @param Post $post
