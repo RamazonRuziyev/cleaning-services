@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 use App\Events\PostCreated;
+use App\Jobs\UploadBigFile;
+use App\Mail\MailPostCreated;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Routing\Controller;
 use App\Http\Requests\PostStoreRequest;
@@ -11,6 +13,7 @@ use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
@@ -36,8 +39,8 @@ class PostController extends Controller
      */
     public function create()
     {
-          $categories = Category::all();
-          $tags = Tag::all();
+          $categories = Category::query()->get();
+          $tags = Tag::query()->get();
         return view('main.post.create', compact('categories','tags'));
     }
     /**
@@ -58,6 +61,8 @@ class PostController extends Controller
                 $post->tags()->attach($request->tag);
              }
             PostCreated::dispatch($post);
+            Mail::to($request->user())->queue( (new MailPostCreated($post))->onQueue('sending-mails'));
+//            UploadBigFile::dispatch($request->file('photo'), $post);
              return redirect()->route('posts.index')->with('success', 'Post yaratildi!');;
         }
         catch (\Exception $exception)
@@ -72,8 +77,8 @@ class PostController extends Controller
     public function show(Post $post)
     {
         $posts = $post->load(['user']);
-        $categories = Category::all();
-        $tags = Tag::all();
+        $categories = Category::query()->get();
+        $tags = Tag::query()->get();
         return view('main.post.show',compact('post','categories','tags','posts'));
     }
     /**

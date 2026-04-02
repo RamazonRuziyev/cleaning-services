@@ -134,7 +134,7 @@
 
                     <div class="bg-light rounded p-5">
                         <h3 class="mb-4 section-title">{{$post->comments()->count()}} Comment</h3>
-                        @canany('create',$comment)
+                        @canany('create',\App\Models\Comment::class)
                         <form action="{{route('comments.store')}}" method="post" >
                             @csrf
                              <input type="hidden" name="post_id" value="{{ $post->id }}">
@@ -155,7 +155,7 @@
                    </div>
                @endauth
             </div>
-{{--               wera turadi--}}
+{{--               shera turadi--}}
                   @guest()
                         <div class="col-lg-4 mt-5 mt-lg-0">
                 <div class="d-flex flex-column text-center bg-secondary rounded mb-5 py-5 px-4">
