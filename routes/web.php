@@ -2,6 +2,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 //Route::get('/', function () {
@@ -18,8 +19,12 @@ Route::get('/auth',[AuthController::class,'register'])->name('register');
 Route::post('/logout',[AuthController::class,'logout'])->name('logout');
 Route::post('/save',[AuthController::class,'save'])->name('save');
 Route::post('/sing',[AuthController::class,'sing'])->name('sing');
+Route::middleware('auth')->group(function () {
+Route::get('/notification/{notification}/read',[NotificationController::class,'read'])->name('notification.read');
+});
 Route::resources([
     'posts' => PostController::class,
-    'comments' => CommentController::class
+    'comments' => CommentController::class,
+    'notification' => NotificationController::class
 ]);
 

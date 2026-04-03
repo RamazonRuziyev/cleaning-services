@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Events\PostCreated;
 use App\Jobs\UploadBigFile;
 use App\Mail\MailPostCreated;
+use App\Notifications\NotificationPostCreated;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Routing\Controller;
 use App\Http\Requests\PostStoreRequest;
@@ -14,6 +15,7 @@ use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
@@ -62,6 +64,7 @@ class PostController extends Controller
              }
             PostCreated::dispatch($post);
             Mail::to($request->user())->queue( (new MailPostCreated($post))->onQueue('sending-mails'));
+            Notification::send(auth()->user(),new NotificationPostCreated($post));
 //            UploadBigFile::dispatch($request->file('photo'), $post);
              return redirect()->route('posts.index')->with('success', 'Post yaratildi!');;
         }
